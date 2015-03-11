@@ -31,38 +31,92 @@ import sys, os
 BUFFER_SIZE = 1024 * 1024 * 10
 
 
-db = {
+def fix_mislabelled_db(f, title, serial_number):
+	if serial_number == "T1402N": # Mr. Driller
+		f.seek(0x159208)
+		blob = f.read(15)
+		if blob == "DYNAMITE COP":
+			return ("Dynamite Cop!", "MK-51013")
+	elif serial_number == "MK-51035": # Crazy Taxi
+		f.seek(0x1617E654)
+		blob = f.read(9)
+		if blob == "Half-Life":
+			return ("Half-Life", "T0000M")
+	elif serial_number == "T0000M": # Unnamed
+		f.seek(0x557CAB0)
+		blob = f.read(13)
+		if blob == "BALL BREAKERS":
+			return ("Ball Breakers", "T0000M")
+
+		f.seek(0x4BD5EEA)
+		blob = f.read(6)
+		if blob == "TOEJAM":
+			return ("ToeJam and Earl 3", "T0000M")
+	elif serial_number == "T0000": # Unnamed
+		f.seek(0x162E20)
+		blob = f.read(15)
+		if blob == "Art of Fighting":
+			return ("Art of Fighting", "T0000")
+
+		f.seek(0x29E898B0)
+		blob = f.read(17)
+		if blob == "Art of Fighting 2":
+			return ("Art of Fighting 2", "T0000")
+
+		f.seek(0x26D5BCA8)
+		blob = f.read(17)
+		if blob == "Art of Fighting 3":
+			return ("Art of Fighting 3", "T0000")
+
+	return (title, serial_number)
+
+unofficial_db = {
+	"RDC-0123" : "Ball Breakers",
+	"THALIA-005" : "Evolution: The World of Sacred Device",
+	"GYPLIKSANG" : "Half-Life - Blue Shift",
+	"NGDT-DC300" : "Last Hope",
+	"NGDT300P" : "Last Hope - Pink Bullets",
+	"NGDT-304DCRE" : "NEO XYX",
+	"51081" : "Propeller Arena",
+	"MK-51162" : "Propeller Arena",
+	"DR001" : "Sturmwind",
+}
+
+official_db = {
 	"T40201N" : "Aero Wings",
 	"T40210N" : "Aero Wings 2: Airstrike",
 	"T9501N" : "AirForce Delta",
 	"MK-51171" : "Alien Front Online",
 	"T15117N" : "Alone in the Dark: The New Nightmare",
-	"RDC-0123" : "Ball Breakers",
 	"T47110M" : "Baldr Force EXE",
 	"T44102N" : "Bang! Gunship Elite",
 	"T40217N" : "Bangai-O",
 	"T38702M" : "Bangai-O",
-	"7011D  50" : "Bangai-O",
+	"T7011D  50" : "Bangai-O",
 	"T20101M" : "Black Matrix AD",
 	"T13001N" : "Blue Stinger",
-	"MK-51065" : "Bomberman Online", # FIXME
+	"MK-51065" : "Bomberman Online",
+	"RDC-0117" : "Bomberman Online",
 	"T46703M" : "Border Down",
 	"T1215N" : "Cannon Spike",
 	"T1218N" : "Capcom vs. SNK",
 	"T1217M" : "Capcom vs. SNK: Millennium Fight 2000",
 	"T1249M" : "Capcom vs. SNK 2: Millionaire Fighting 2001",
 	"T5701N" : "Carrier",
-	"T47801M" : "Chaos Field", # FIXME
+	"T47801M" : "Chaos Field",
 	"T15127N" : "Charge N Blast",
 	"HDR-0039" : "ChuChu Rocket!",
 	"HDR-0048" : "ChuChu Rocket!",
 	"MK-51049" : "ChuChu Rocket!",
 	"MK-51049  50" : "ChuChu Rocket!",
+	"RDC-0140" : "ChuChu Rocket!",
 	"MK-51160" : "Confidential Mission",
 	"MK-51035" : "Crazy Taxi",
 	"MK-51136" : "Crazy Taxi 2",
+	"MK-5113650" : "Crazy Taxi 2",
 	"MK-51036" : "D2",
 	"MK-51037" : "Daytona USA",
+	"T19724M" : "Daytona USA",
 	"T3601N" : "Dead or Alive 2",
 	"T8116D-05" : "Dead or Alive 2",
 	"T3602M" : "Dead or Alive 2",
@@ -70,11 +124,10 @@ db = {
 	"T2401N" : "Death Crimson OX",
 	"T17705N" : "Deep Fighter",
 	"T17704D" : "Deep Fighter",
-	"T15112N" : "Demolition Racer",
+	"T15112N" : "Demolition Racer: No Exit",
 	"T1217N" : "Dino Crisis",
 	"T40203N" : "Draconus - Cult of The Wyrm",
 	"T17720N" : "Dragonriders Chronicles of Pern",
-	"MK-51013" : "Dynamite Cop!", # FIXME: Not found and collides with Mr. Driller
 	"MK-51033" : "Ecco the Dolphin: Defender of the Future",
 	"MK-51033  50" : "Ecco the Dolphin: Defender of the Future",
 	"T41601N" : "Elemental Gimmick Gear",
@@ -83,9 +136,10 @@ db = {
 	"T17705SD  50" : "Evolution: The World of Sacred Device",
 	"T17706N" : "Evolution: The World of Sacred Device",
 	"T17711N" : "Evolution 2: Far Off Promise",
+	"T1711N" : "Evolution 2: Far Off Promise",
 	"T45005D  50" : "Evolution 2: Far Off Promise",
 	"T15104N" : "Expendable",
-	"" : "Fast Striker",
+	"MK1014" : "Fast Striker",
 	"T44306N" : "Fatal Fury - Mark of The Wolves",
 	"T35801N" : "Fighting Force 2",
 	"T36802D  05" : "Fighting Force 2",
@@ -100,8 +154,6 @@ db = {
 	"T2402M" : "Guilty Gear X",
 	"T1214N" : "Gun Bird 2",
 	"T13301N" : "Gundam Side Story 0079 - Rise From The Ashes",
-	"" : "Half-Life",
-	"" : "Half-Life - Blue Shift",
 	"MK-5104150" : "Head Hunter",
 	"MK-51002" : "House of the Dead 2",
 	"HDR-0007" : "House of the Dead 2",
@@ -113,7 +165,7 @@ db = {
 	"T46001N" : "Illbleed",
 	"T12503N" : "Incoming",
 	"MK-51058" : "Jet Grind Radio",
-	"T1206N" : "JoJos Bizarre Adventure",
+	"T1206N" : "JoJo's Bizarre Adventure",
 	"T47803M" : "Karous",
 	"T44302N" : "King of Fighters '99 Evolution, The",
 	"T47303M" : "King of Fighters 2000, The",
@@ -121,8 +173,6 @@ db = {
 	"T47305M" : "King of Fighters 2002, The",
 	"T2106M" : "L.O.L. Lack Of Love",
 	"T44305N" : "The Last Blade 2: Heart of the Samurai",
-	"NGDT-DC300" : "Last Hope",
-	"" : "Last Hope - Pink Bullets",
 	"T36802N" : "Legacy of Kain - Soul Reaver",
 	"T21501M" : "Macross M3",
 	"MK-51050" : "Maken X",
@@ -137,7 +187,6 @@ db = {
 	"T9701N" : "Mortal Kombat Gold",
 	"T1402N" : "Mr. Driller",
 	"T9904M" : "Neo Golden Logres",
-	"NGDT-304DCRE" : "NEO XYX",
 	"T9504N" : "Nightmare Creatures 2",
 	"T36807N" : "Omikron - The Nomad Soul",
 	"MK-51140" : "Ooga Booga",
@@ -147,7 +196,6 @@ db = {
 	"T1201N" : "Power Stone",
 	"T1211N" : "Power Stone 2",
 	"T1219N" : "Project Justice",
-	"51081" : "Propeller Arena",
 	"T31101N" : "Psychic Force 2012",
 	"T9907M" : "Psyvariar 2: The Will to Fabricate",
 	"MK-51061" : "Quake III Arena",
@@ -161,7 +209,7 @@ db = {
 	"T40218N" : "Record of Lodoss War",
 	"T40215N" : "Red Dog: Superior Firepower",
 	"RDXRE-JP" : "Redux: Dark Matters",
-	"T1204N" : "Resident Evil: Code Veronica",
+	"T1204N" : "Resident Evil Code: Veronica",
 	"T1205N" : "Resident Evil 2",
 	"T1220N" : "Resident Evil 3: Nemesis",
 	"MK-51192  50" : "Rez",
@@ -191,7 +239,6 @@ db = {
 	"T1213N" : "Street Fighter III: 3rd Strike",
 	"T1210N" : "Street Fighter III: Double Impact",
 	"T1203N" : "Street Fighter Alpha 3",
-	"" : "Sturmwind",
 	"T40206N" : "Super Magnetic Neo",
 	"T1250M" : "Super Puzzle Fighter II X for Matching Service",
 	"T40216N" : "Surf Rocket Racers",
@@ -199,7 +246,6 @@ db = {
 	"T1208N" : "Tech Romancer",
 	"MK-51144" : "The Typing of the Dead",
 	"MK-51011" : "Time Stalkers",
-	"" : "ToeJam and Earl 3",
 	"T40211N" : "Tokyo Xtreme Racer 2",
 	"MK-51020" : "Toy Commander",
 	"T29102M" : "Triggerheart Exelica",
@@ -281,7 +327,6 @@ def get_dreamcast_game_info(game_file):
 	# Read the header
 	f.seek(index)
 	header = f.read(256)
-	f.close()
 
 	# Parse the header info
 	offset = len(header_text)
@@ -292,15 +337,25 @@ def get_dreamcast_game_info(game_file):
 	boot = header[offset + 64 : offset + 64 + 16].strip()
 	maker = header[offset + 80 : offset + 80 + 16].strip()
 	sloppy_title = header[offset + 96 : ].strip()
+	title = None
+	
+	# Check for unofficial releases
+	if serial_number in unofficial_db:
+		title = unofficial_db[serial_number]
+	# Check for official releases
+	elif serial_number in official_db:
+		title = official_db[serial_number]
+
+	# Check for mislabelled releases
+	title, serial_number = fix_mislabelled_db(f, title, serial_number)
+
+	f.close()
 
 	# Return None if the title is not found in the database
-	if not serial_number in db:
+	if not title:
 		print('serial_number', serial_number)
 		print('header', header)
 		return None
-
-	# Look up the name
-	title = db[serial_number]
 
 	print('title', title)
 	print('disc_info', disc_info)
@@ -309,7 +364,9 @@ def get_dreamcast_game_info(game_file):
 	print('version', version)
 	print('boot', boot)
 	print('maker', maker)
+	print('title', title)
 	print('sloppy_title', sloppy_title)
+	print('header_index', index)
 	#print(header)
 
 	return None
