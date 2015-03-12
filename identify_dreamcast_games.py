@@ -42,6 +42,11 @@ def fix_mislabelled_db(f, title, serial_number):
 		blob = f.read(9)
 		if blob == "Half-Life":
 			return ("Half-Life", "T0000M")
+	elif serial_number == "T43903M": # Culdcept II
+		f.seek(0x264E1E5D)
+		blob = f.read(10)
+		if blob == "CHAOSFIELD":
+			return ("Chaos Field", "T47801M")
 	elif serial_number == "T0000M": # Unnamed
 		f.seek(0x557CAB0)
 		blob = f.read(13)
@@ -114,6 +119,7 @@ official_db = {
 	"MK-51035" : "Crazy Taxi",
 	"MK-51136" : "Crazy Taxi 2",
 	"MK-5113650" : "Crazy Taxi 2",
+	"T43903M" : "Culdcept II",
 	"MK-51036" : "D2",
 	"MK-51037" : "Daytona USA",
 	"T19724M" : "Daytona USA",
@@ -124,6 +130,7 @@ official_db = {
 	"T2401N" : "Death Crimson OX",
 	"T17705N" : "Deep Fighter",
 	"T17704D" : "Deep Fighter",
+	"T17704D 09" : "Deep Fighter",
 	"T15112N" : "Demolition Racer: No Exit",
 	"T1217N" : "Dino Crisis",
 	"T40203N" : "Draconus - Cult of The Wyrm",
@@ -290,17 +297,24 @@ def locate_string_in_file(f, file_size, string_to_find):
 		if not rom_data:
 			break
 
-		# Move back the length of the string to find
-		# This is done to stop the string to find from being spread over multiple buffers
+		# Figure out if we need an offset
 		file_pos = f.tell()
+		use_offset = False
 		if file_pos > string_length and file_pos < file_size:
-			f.seek(file_pos - string_length)
+			use_offset = True
 
 		# Get the string to find location
 		if string_to_find in rom_data:
 			index = rom_data.index(string_to_find)
-			string_file_location = f.tell() - BUFFER_SIZE + index + string_length
+			string_file_location = (file_pos - len(rom_data)) + index
+			#if use_offset:
+			#	string_file_location += string_length
 			return string_file_location
+
+		# Move back the length of the string to find
+		# This is done to stop the string to find from being spread over multiple buffers
+		if use_offset:
+			f.seek(file_pos - string_length)
 
 	return -1
 
@@ -355,8 +369,9 @@ def get_dreamcast_game_info(game_file):
 	if not title:
 		print('serial_number', serial_number)
 		print('header', header)
+		print('index', index)
 		return None
-
+	
 	print('title', title)
 	print('disc_info', disc_info)
 	print('region', region)
@@ -371,7 +386,7 @@ def get_dreamcast_game_info(game_file):
 
 	return None
 '''
-file_name = "E:/Sega/Dreamcast/Dynamite Cop!/dynamite_cop.cdi"
+file_name = "E:/Sega/Dreamcast/Deep Fighter/deep_fighter_dist_01.cdi"
 info = get_dreamcast_game_info(file_name)
 print(info)
 '''
