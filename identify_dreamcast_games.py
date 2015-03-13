@@ -126,13 +126,13 @@ with open('official_eu_db.json', 'rb') as f:
 	official_eu_db = json.loads(strip_comments(f.read()))
 
 
-def is_cdi_file(game_file):
+def is_dreamcast_file(game_file):
 	# Skip if not file
 	if not os.path.isfile(game_file):
 		return False
 
-	# Skip if not a CDI file
-	if not os.path.splitext(game_file)[1].lower() == '.cdi':
+	# Skip if not a usable file
+	if not os.path.splitext(game_file)[1].lower() in ['.cdi', '.gdi', '.iso']:
 		return False
 
 	return True
@@ -170,9 +170,21 @@ def locate_string_in_file(f, file_size, string_to_find):
 
 	return -1
 
+def get_track_01_from_gdi_file(file_name):
+	path = os.path.dirname(file_name)
+	with open(file_name, 'rb') as f:
+		track_01_line = f.read().split("\r\n")[1]
+		track_01_file = track_01_line.split(' ')[4]
+		track_01_file = os.path.join(path, track_01_file)
+		return track_01_file
+
 def get_dreamcast_game_info(game_file):
 	# Get the full file name
 	full_entry = os.path.abspath(game_file)
+
+	# If it's a GDI file read track 01
+	if os.path.splitext(full_entry)[1].lower() == '.gdi':
+		full_entry = get_track_01_from_gdi_file(full_entry)
 
 	# Open the game file
 	f = open(full_entry, 'rb', buffering=BUFFER_SIZE)
@@ -249,10 +261,13 @@ for root, dirs, files in os.walk(games):
 		# Get the full path
 		entry = root + '/' + file
 
-		if not is_cdi_file(entry):
+		if not is_dreamcast_file(entry):
 			continue
 
-		info = get_dreamcast_game_info(entry)
-		print(info['title'], info['serial_number'])
+		try:
+			info = get_dreamcast_game_info(entry)
+			print(info['title'], info['serial_number'])
+		except:
+			print('Failed on game {0}'.format(entry))
 
 		
