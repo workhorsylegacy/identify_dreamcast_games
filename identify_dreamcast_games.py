@@ -101,18 +101,27 @@ def fix_mislabelled_db(f, title, serial_number):
 
 	return (title, serial_number)
 
+def strip_comments(data):
+	lines = data.split("\r\n")
+	data = []
+	for line in lines:
+		if '/*' not in line and '*/' not in line:
+			data.append(line)
+
+	return "\r\n".join(data)
+			
 
 with open('unofficial_db.json', 'rb') as f:
-	unofficial_db = json.loads(f.read())
+	unofficial_db = json.loads(strip_comments(f.read()))
 
 with open('official_us_db.json', 'rb') as f:
-	official_us_db = json.loads(f.read())
+	official_us_db = json.loads(strip_comments(f.read()))
 
 with open('official_jp_db.json', 'rb') as f:
-	official_jp_db = json.loads(f.read())
+	official_jp_db = json.loads(strip_comments(f.read()))
 
 with open('official_eu_db.json', 'rb') as f:
-	official_eu_db = json.loads(f.read())
+	official_eu_db = json.loads(strip_comments(f.read()))
 
 
 def is_cdi_file(game_file):
