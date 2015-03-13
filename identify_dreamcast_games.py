@@ -33,8 +33,8 @@ BUFFER_SIZE = 1024 * 1024 * 10
 
 
 def read_blob_at(file, start_address, size):
-	file.seek(0x159208)
-	blob = file.read(15)
+	file.seek(start_address)
+	blob = file.read(size)
 	return blob
 
 # FIXME: Look up these games and make sure it works
