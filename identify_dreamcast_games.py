@@ -32,46 +32,70 @@ import json
 BUFFER_SIZE = 1024 * 1024 * 10
 
 
+def read_blob_at(file, start_address, size):
+	file.seek(0x159208)
+	blob = file.read(15)
+	return blob
+
+# FIXME: Look up these games and make sure it works
+def fix_games_with_same_serial_number(f, title, serial_number):
+	'''
+	if serial_number == 'T8116D  05':
+		EU ECW Hardcore Revolution
+		EU Dead or Alive 2
+
+	elif serial_number == 'T9706D  61':
+		EU 18 Wheeler: American Pro Trucker
+		EU 4-Wheel Thunder
+
+	elif serial_number == 'T1214M':
+		JP BioHazard Code: Veronica Trial Edition
+		JP BioHazard 2
+
+	elif serial_number == 'MK-51062':
+		US Skies of Arcadia
+		US NFL 2K1
+
+	elif serial_number == 'MK-51168':
+		US NFL 2K2
+		US Confidential Mission
+
+	elif serial_number == 'T8101N':
+		US Jeremy McGrath Supercross 2000
+		US NFL Quarterback Club 2000
+
+	elif serial_number == 'T30001M':
+		JP D2 Shock
+		JP Kaze no Regret Limited Edition
+
+	elif serial_number == 'MK51038  50':
+		EU Sega WorldWide Soccer 2000 Euro Edition
+		EU Zombie Revenge
+	'''
+
+	return (title, serial_number)
+
 def fix_mislabelled_db(f, title, serial_number):
 	if serial_number == "T1402N": # Mr. Driller
-		f.seek(0x159208)
-		blob = f.read(15)
-		if blob == "DYNAMITE COP":
+		if read_blob_at(f, 0x159208, 15) == "DYNAMITE COP":
 			return ("Dynamite Cop!", "MK-51013")
 	elif serial_number == "MK-51035": # Crazy Taxi
-		f.seek(0x1617E654)
-		blob = f.read(9)
-		if blob == "Half-Life":
+		if read_blob_at(f, 0x1617E654, 9) == "Half-Life":
 			return ("Half-Life", "T0000M")
 	elif serial_number == "T43903M": # Culdcept II
-		f.seek(0x264E1E5D)
-		blob = f.read(10)
-		if blob == "CHAOSFIELD":
+		if read_blob_at(f, 0x264E1E5D, 10) == "CHAOSFIELD":
 			return ("Chaos Field", "T47801M")
 	elif serial_number == "T0000M": # Unnamed
-		f.seek(0x557CAB0)
-		blob = f.read(13)
-		if blob == "BALL BREAKERS":
+		if read_blob_at(f, 0x557CAB0, 13) == "BALL BREAKERS":
 			return ("Ball Breakers", "T0000M")
-
-		f.seek(0x4BD5EEA)
-		blob = f.read(6)
-		if blob == "TOEJAM":
+		elif read_blob_at(f, 0x4BD5EEA, 6) == "TOEJAM":
 			return ("ToeJam and Earl 3", "T0000M")
 	elif serial_number == "T0000": # Unnamed
-		f.seek(0x162E20)
-		blob = f.read(15)
-		if blob == "Art of Fighting":
+		if read_blob_at(f, 0x162E20, 15) == "Art of Fighting":
 			return ("Art of Fighting", "T0000")
-
-		f.seek(0x29E898B0)
-		blob = f.read(17)
-		if blob == "Art of Fighting 2":
+		elif read_blob_at(f, 0x29E898B0, 17) == "Art of Fighting 2":
 			return ("Art of Fighting 2", "T0000")
-
-		f.seek(0x26D5BCA8)
-		blob = f.read(17)
-		if blob == "Art of Fighting 3":
+		elif read_blob_at(f, 0x26D5BCA8, 17) == "Art of Fighting 3":
 			return ("Art of Fighting 3", "T0000")
 
 	return (title, serial_number)
@@ -187,6 +211,9 @@ def get_dreamcast_game_info(game_file):
 	elif serial_number in official_jp_db:
 		title = official_jp_db[serial_number]
 
+	# Check for games with the same serial number
+	title, serial_number = fix_games_with_same_serial_number(f, title, serial_number)
+
 	# Check for mislabelled releases
 	title, serial_number = fix_mislabelled_db(f, title, serial_number)
 
@@ -200,7 +227,7 @@ def get_dreamcast_game_info(game_file):
 		print('header', header)
 		print('index', index)
 		return None
-
+	'''
 	print('title', title)
 	print('disc_info', disc_info)
 	print('region', region)
@@ -212,7 +239,7 @@ def get_dreamcast_game_info(game_file):
 	print('sloppy_title', sloppy_title)
 	print('header_index', index)
 	#print(header)
-
+	'''
 	return None
 '''
 file_name = "E:/Sega/Dreamcast/Deep Fighter/deep_fighter_dist_01.cdi"
