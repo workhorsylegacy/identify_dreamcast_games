@@ -254,20 +254,5 @@ def get_dreamcast_game_info(game_file):
 	}
 
 
-# Look at all the games, and get their serial number and proper titles
-games = "E:/Sega/Dreamcast"
-for root, dirs, files in os.walk(games):
-	for file in files:
-		# Get the full path
-		entry = root + '/' + file
-
-		if not is_dreamcast_file(entry):
-			continue
-
-		try:
-			info = get_dreamcast_game_info(entry)
-			print(info['title'], info['serial_number'])
-		except:
-			print('Failed on game {0}'.format(entry))
 
 		
