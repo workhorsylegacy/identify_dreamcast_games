@@ -88,14 +88,14 @@ def fix_mislabelled_db(f, title, serial_number):
 	elif serial_number == "T0000M": # Unnamed
 		if read_blob_at(f, 0x557CAB0, 13) == "BALL BREAKERS":
 			return ("Ball Breakers", "T0000M")
-		elif read_blob_at(f, 0x4BD5EEA, 6) == "TOEJAM":
+		elif read_blob_at(f, 0x4BD5EE5, 6) == "TOEJAM":
 			return ("ToeJam and Earl 3", "T0000M")
 	elif serial_number == "T0000": # Unnamed
 		if read_blob_at(f, 0x162E20, 15) == "Art of Fighting":
 			return ("Art of Fighting", "T0000")
 		elif read_blob_at(f, 0x29E898B0, 17) == "Art of Fighting 2":
 			return ("Art of Fighting 2", "T0000")
-		elif read_blob_at(f, 0x26D5BCA8, 17) == "Art of Fighting 3":
+		elif read_blob_at(f, 0x26D5BCA4, 17) == "Art of Fighting 3":
 			return ("Art of Fighting 3", "T0000")
 
 	return (title, serial_number)
