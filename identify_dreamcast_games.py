@@ -100,17 +100,9 @@ def fix_mislabelled_db(f, title, serial_number):
 
 	return (title, serial_number)
 
-unofficial_db = {
-	"RDC-0123" : "Ball Breakers",
-	"THALIA-005" : "Evolution: The World of Sacred Device",
-	"GYPLIKSANG" : "Half-Life - Blue Shift",
-	"NGDT-DC300" : "Last Hope",
-	"NGDT300P" : "Last Hope - Pink Bullets",
-	"NGDT-304DCRE" : "NEO XYX",
-	"51081" : "Propeller Arena",
-	"MK-51162" : "Propeller Arena",
-	"DR001" : "Sturmwind",
-}
+
+with open('unofficial_db.json', 'rb') as f:
+	unofficial_db = json.loads(f.read())
 
 with open('official_us_db.json', 'rb') as f:
 	official_us_db = json.loads(f.read())
@@ -196,11 +188,12 @@ def get_dreamcast_game_info(game_file):
 	maker = header[offset + 80 : offset + 80 + 16].strip()
 	sloppy_title = header[offset + 96 : ].strip()
 	title = None
-	
-	# Check for unofficial releases
+
+	# Check for different types of releases
+
+	# Unofficial
 	if serial_number in unofficial_db:
 		title = unofficial_db[serial_number]
-	# Check for official releases
 	# US
 	elif serial_number in official_us_db:
 		title = official_us_db[serial_number]
