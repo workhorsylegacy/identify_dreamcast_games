@@ -76,7 +76,7 @@ def fix_games_with_same_serial_number(f, title, serial_number):
 
 	return (title, serial_number)
 
-def fix_mislabelled_db(f, title, serial_number):
+def fix_games_that_are_mislabelled(f, title, serial_number):
 	if serial_number == "T1402N": # Mr. Driller
 		if read_blob_at(f, 0x159208, 15) == "DYNAMITE COP":
 			return ("Dynamite Cop!", "MK-51013")
@@ -182,9 +182,9 @@ def get_dreamcast_game_info(game_file):
 	header_text = "SEGA SEGAKATANA SEGA ENTERPRISES"
 	index = locate_string_in_file(f, file_size, header_text)
 	
-	# Return None if not found
+	# Throw if index not found
 	if index == -1:
-		return None
+		raise Exception("Failed to find Sega Dreamcast Header.")
 
 	# Read the header
 	f.seek(index)
@@ -220,38 +220,28 @@ def get_dreamcast_game_info(game_file):
 	title, serial_number = fix_games_with_same_serial_number(f, title, serial_number)
 
 	# Check for mislabelled releases
-	title, serial_number = fix_mislabelled_db(f, title, serial_number)
+	title, serial_number = fix_games_that_are_mislabelled(f, title, serial_number)
 
 	f.close()
 
-	# Return None if the title is not found in the database
+	# Throw if the title is not found in the database
 	if not title:
-		print('-----------------------------------------------------')
-		print(game_file)
-		print('serial_number', serial_number)
-		print('header', header)
-		print('index', index)
-		return None
-	'''
-	print('title', title)
-	print('disc_info', disc_info)
-	print('region', region)
-	print('serial_number', serial_number)
-	print('version', version)
-	print('boot', boot)
-	print('maker', maker)
-	print('title', title)
-	print('sloppy_title', sloppy_title)
-	print('header_index', index)
-	#print(header)
-	'''
-	return None
-'''
-file_name = "E:/Sega/Dreamcast/Deep Fighter/deep_fighter_dist_01.cdi"
-info = get_dreamcast_game_info(file_name)
-print(info)
-'''
-#'''
+		raise Exception("Failed to find game in database.")
+
+	return {
+		'title' : title,
+		'disc_info' : disc_info,
+		'region' : region,
+		'serial_number' : serial_number,
+		'version' : version,
+		'boot' : boot,
+		'maker' : maker,
+		'title' : title,
+		'sloppy_title' : sloppy_title,
+		'header_index' : index,
+	}
+
+
 # Look at all the games, and get their serial number and proper titles
 games = "E:/Sega/Dreamcast"
 for root, dirs, files in os.walk(games):
@@ -263,6 +253,6 @@ for root, dirs, files in os.walk(games):
 			continue
 
 		info = get_dreamcast_game_info(entry)
-		#print(info)
-#'''
+		print(info['title'], info['serial_number'])
+
 		
