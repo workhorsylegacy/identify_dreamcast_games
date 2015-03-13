@@ -98,6 +98,8 @@ def fix_mislabelled_db(f, title, serial_number):
 			return ("Art of Fighting 2", "T0000")
 		elif read_blob_at(f, 0x26D5BCA4, 17) == "Art of Fighting 3":
 			return ("Art of Fighting 3", "T0000")
+		elif read_blob_at(f, 0x295301F0, 5) == "Redux":
+			return ("Redux: Dark Matters", "T0000")
 
 	return (title, serial_number)
 

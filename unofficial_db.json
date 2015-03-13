@@ -101,6 +101,7 @@
 "RDC-0098" : "Legacy of Kain: Soul Reaver",
 "RDC-0099" : "Star Wars Episode I: Jedi Power Battles",
 "RDC-0100" : "Capcom vs. SNK Millennium Collection",
+"RDC-101" : "Vampire Chronicle For Matching Service",
 "RDC-0101" : "Vampire Chronicle For Matching Service (80 and 99 minute versions released)",
 "RDC-0102" : "WWF Royal Rumble",
 "RDC-0103" : "Crazy Taxi",
@@ -158,13 +159,21 @@
 "RDC-0155" : "Ninja Master’s (NEO4ALL RC4)",
 
 
-
 /* DCP Releases */
 "T1711N" : "Evolution 2: Far Off Promise",
 "MK51154 50" : "Fighting Vipers 2",
+"MK-5115450" : "Fighting Vipers 2",
 "MK-5113650" : "Crazy Taxi 2",
+"MK-5102151" : "Red Dog: Superior Firepower",
 
+
+/* Others */
 "THALIA-005" : "Evolution: The World of Sacred Device",
+"T-36805N" : "Sword of the Berserk: Guts' Rage",
+"GM-9999999" : "Street Fighter Alpha 3",
+"MK0815" : "SoulCalibur",
+"CHERRY" : "Rayman 2: The Great Escape",
+"T-8102N" : "Omikron: The Nomad Soul",
 
 
 /* Unreleased */
