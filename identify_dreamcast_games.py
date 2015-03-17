@@ -113,16 +113,16 @@ def strip_comments(data):
 	return "\r\n".join(data)
 			
 
-with open('unofficial_db.json', 'rb') as f:
+with open('db_dreamcast_unofficial.json', 'rb') as f:
 	unofficial_db = json.loads(strip_comments(f.read()))
 
-with open('official_us_db.json', 'rb') as f:
+with open('db_dreamcast_official_us.json', 'rb') as f:
 	official_us_db = json.loads(strip_comments(f.read()))
 
-with open('official_jp_db.json', 'rb') as f:
+with open('db_dreamcast_official_jp.json', 'rb') as f:
 	official_jp_db = json.loads(strip_comments(f.read()))
 
-with open('official_eu_db.json', 'rb') as f:
+with open('db_dreamcast_official_eu.json', 'rb') as f:
 	official_eu_db = json.loads(strip_comments(f.read()))
 
 
@@ -159,8 +159,6 @@ def locate_string_in_file(f, file_size, string_to_find):
 		if string_to_find in rom_data:
 			index = rom_data.index(string_to_find)
 			string_file_location = (file_pos - len(rom_data)) + index
-			#if use_offset:
-			#	string_file_location += string_length
 			return string_file_location
 
 		# Move back the length of the string to find
