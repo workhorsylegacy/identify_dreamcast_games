@@ -183,10 +183,11 @@
 
 
 /* Homebrew */
-"MK1014" : "Fast Striker",
+/*"MK1014" : "Fast Striker",*/
 "NGDT-DC300" : "Last Hope",
 "NGDT300P" : "Last Hope - Pink Bullets",
 "NGDT-304DCRE" : "NEO XYX",
+"MK1014" : "NEO XYX",
 "DR001" : "Sturmwind"
 }
 

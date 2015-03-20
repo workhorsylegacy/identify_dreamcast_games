@@ -131,6 +131,8 @@ def fix_games_that_are_mislabelled(f, title, serial_number):
 	elif serial_number == b"MK-51035": # Crazy Taxi
 		if read_blob_at(f, 0x1617E654, 9) == b"Half-Life":
 			return (u"Half-Life", "T0000M")
+		elif read_blob_at(f, 0x1EA78B5, 10) == b"Shadow Man":
+			return (u"Shadow Man", "T0000M")
 	elif serial_number == b"T43903M": # Culdcept II
 		if read_blob_at(f, 0x264E1E5D, 10) == b"CHAOSFIELD":
 			return (u"Chaos Field", "T47801M")
@@ -148,6 +150,29 @@ def fix_games_that_are_mislabelled(f, title, serial_number):
 			return (u"Art of Fighting 3", "T0000")
 		elif read_blob_at(f, 0x295301F0, 5) == b"Redux":
 			return (u"Redux: Dark Matters", "T0000")
+	elif serial_number == b"MK-51025": # NHL 2K1
+		if read_blob_at(f, 0x410CA8, 14) == b"READY 2 RUMBLE":
+			return (u"Ready 2 Rumble Boxing", "T0000")
+	elif serial_number == b"T36804N": # Walt Disney World Quest: Magical Racing Tour
+		if read_blob_at(f, 0x245884, 6) == b"MakenX":
+			return (u"Maken X", "MK-51050")
+	elif serial_number == b"RDC-0117": # The king of Fighters '96 Collection (NEO4ALL RC4)
+		if read_blob_at(f, 0x159208, 16) == b"BOMBERMAN ONLINE":
+			return (u"Bomberman Online", "RDC-0120")
+	elif serial_number == b"RDC-0140": # Dead or Alive 2
+		if read_blob_at(f, 0x15639268, 13) == b"CHUCHU ROCKET":
+			return (u"ChuChu Rocket!", "RDC-0139")
+	elif serial_number == b"T19724M": # Pizzicato Polka: Suisei Genya
+		if read_blob_at(f, 0x3CA16B8, 7) == b"DAYTONA":
+			return (u"Daytona USA", "MK-51037")
+	elif serial_number == b"MK-51049": # ChuChu Rocket!
+		if read_blob_at(f, 0xC913DDC, 13) == b"HYDRO THUNDER":
+			return (u"Hydro Thunder", "T9702N")
+		elif read_blob_at(f, 0x2D096802, 17) == b"MARVEL VS. CAPCOM":
+			return (u"Marvel vs. Capcom 2", "T1212N")
+	elif serial_number == b"T44304N": # Sports Jam
+		if read_blob_at(f, 0x157FA8, 9) == b"OUTRIGGER":
+			return (u"OutTrigger: International Counter Terrorism Special Force", "MK-51102")
 
 	return (title, serial_number)
 
