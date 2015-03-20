@@ -124,7 +124,7 @@ def _fix_games_with_same_serial_number(f, title, serial_number):
 
 	return (title, serial_number)
 
-def _fix_games_that_are_mislabelled(f, title, serial_number):
+def _fix_games_that_are_mislabeled(f, title, serial_number):
 	if serial_number == b"T1402N": # Mr. Driller
 		if _read_blob_at(f, 0x159208, 12) == b"DYNAMITE COP":
 			return (u"Dynamite Cop!", "MK-51013")
@@ -284,8 +284,8 @@ def get_dreamcast_game_info(game_file):
 	# Check for games with the same serial number
 	title, serial_number = _fix_games_with_same_serial_number(f, title, serial_number)
 
-	# Check for mislabelled releases
-	title, serial_number = _fix_games_that_are_mislabelled(f, title, serial_number)
+	# Check for mislabeled releases
+	title, serial_number = _fix_games_that_are_mislabeled(f, title, serial_number)
 
 	f.close()
 
