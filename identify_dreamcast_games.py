@@ -132,7 +132,7 @@ def _fix_games_that_are_mislabelled(f, title, serial_number):
 		if _read_blob_at(f, 0x1617E654, 9) == b"Half-Life":
 			return (u"Half-Life", "T0000M")
 		elif _read_blob_at(f, 0x1EA78B5, 10) == b"Shadow Man":
-			return (u"Shadow Man", "T0000M")
+			return (u"Shadow Man", "T8106N")
 	elif serial_number == b"T43903M": # Culdcept II
 		if _read_blob_at(f, 0x264E1E5D, 10) == b"CHAOSFIELD":
 			return (u"Chaos Field", "T47801M")
@@ -152,7 +152,7 @@ def _fix_games_that_are_mislabelled(f, title, serial_number):
 			return (u"Redux: Dark Matters", "T0000")
 	elif serial_number == b"MK-51025": # NHL 2K1
 		if _read_blob_at(f, 0x410CA8, 14) == b"READY 2 RUMBLE":
-			return (u"Ready 2 Rumble Boxing", "T0000")
+			return (u"Ready 2 Rumble Boxing", "T9704N")
 	elif serial_number == b"T36804N": # Walt Disney World Quest: Magical Racing Tour
 		if _read_blob_at(f, 0x245884, 6) == b"MakenX":
 			return (u"Maken X", "MK-51050")
