@@ -33,6 +33,49 @@ import json
 BUFFER_SIZE = 1024 * 1024 * 10
 
 
+def strip_comments(data):
+	lines = data.split(b"\r\n")
+	data = []
+	for line in lines:
+		if b'/*' not in line and b'*/' not in line:
+			data.append(line)
+
+	return b"\r\n".join(data)
+			
+
+with open('db_dreamcast_unofficial.json', 'rb') as f:
+	unofficial_db = json.loads(strip_comments(f.read()).decode('utf8'))
+
+with open('db_dreamcast_official_us.json', 'rb') as f:
+	official_us_db = json.loads(strip_comments(f.read()).decode('utf8'))
+
+with open('db_dreamcast_official_jp.json', 'rb') as f:
+	official_jp_db = json.loads(strip_comments(f.read()).decode('utf8'))
+
+with open('db_dreamcast_official_eu.json', 'rb') as f:
+	official_eu_db = json.loads(strip_comments(f.read()).decode('utf8'))
+
+
+# Convert the keys from strings to bytes
+dbs = [
+	unofficial_db,
+	official_us_db,
+	official_jp_db,
+	official_eu_db,
+]
+for db in dbs:
+	keys = db.keys()
+	for key in keys:
+		# Get the value
+		val = db[key]
+
+		# Remove the unicode key
+		db.pop(key)
+
+		# Add the bytes key and value
+		db[bytes(key, 'utf-8')] = val
+
+
 def read_blob_at(file, start_address, size):
 	file.seek(start_address)
 	blob = file.read(size)
@@ -103,47 +146,6 @@ def fix_games_that_are_mislabelled(f, title, serial_number):
 
 	return (title, serial_number)
 
-def strip_comments(data):
-	lines = data.split(b"\r\n")
-	data = []
-	for line in lines:
-		if b'/*' not in line and b'*/' not in line:
-			data.append(line)
-
-	return b"\r\n".join(data)
-			
-
-with open('db_dreamcast_unofficial.json', 'rb') as f:
-	unofficial_db = json.loads(strip_comments(f.read()).decode('utf8'))
-
-with open('db_dreamcast_official_us.json', 'rb') as f:
-	official_us_db = json.loads(strip_comments(f.read()).decode('utf8'))
-
-with open('db_dreamcast_official_jp.json', 'rb') as f:
-	official_jp_db = json.loads(strip_comments(f.read()).decode('utf8'))
-
-with open('db_dreamcast_official_eu.json', 'rb') as f:
-	official_eu_db = json.loads(strip_comments(f.read()).decode('utf8'))
-
-
-# Convert the keys from strings to bytes
-dbs = [
-	unofficial_db,
-	official_us_db,
-	official_jp_db,
-	official_eu_db,
-]
-for db in dbs:
-	keys = db.keys()
-	for key in keys:
-		# Get the value
-		val = db[key]
-
-		# Remove the unicode key
-		db.pop(key)
-
-		# Add the bytes key and value
-		db[bytes(key, 'utf-8')] = val
 
 def is_dreamcast_file(game_file):
 	# Skip if not file
