@@ -77,54 +77,73 @@ def fix_games_with_same_serial_number(f, title, serial_number):
 	return (title, serial_number)
 
 def fix_games_that_are_mislabelled(f, title, serial_number):
-	if serial_number == "T1402N": # Mr. Driller
-		if read_blob_at(f, 0x159208, 15) == "DYNAMITE COP":
+	if serial_number == b"T1402N": # Mr. Driller
+		if read_blob_at(f, 0x159208, 12) == b"DYNAMITE COP":
 			return (u"Dynamite Cop!", "MK-51013")
-	elif serial_number == "MK-51035": # Crazy Taxi
-		if read_blob_at(f, 0x1617E654, 9) == "Half-Life":
+	elif serial_number == b"MK-51035": # Crazy Taxi
+		if read_blob_at(f, 0x1617E654, 9) == b"Half-Life":
 			return (u"Half-Life", "T0000M")
-	elif serial_number == "T43903M": # Culdcept II
-		if read_blob_at(f, 0x264E1E5D, 10) == "CHAOSFIELD":
+	elif serial_number == b"T43903M": # Culdcept II
+		if read_blob_at(f, 0x264E1E5D, 10) == b"CHAOSFIELD":
 			return (u"Chaos Field", "T47801M")
-	elif serial_number == "T0000M": # Unnamed
-		if read_blob_at(f, 0x557CAB0, 13) == "BALL BREAKERS":
+	elif serial_number == b"T0000M": # Unnamed
+		if read_blob_at(f, 0x557CAB0, 13) == b"BALL BREAKERS":
 			return (u"Ball Breakers", "T0000M")
-		elif read_blob_at(f, 0x4BD5EE5, 6) == "TOEJAM":
+		elif read_blob_at(f, 0x4BD5EE5, 6) == b"TOEJAM":
 			return (u"ToeJam and Earl 3", "T0000M")
-	elif serial_number == "T0000": # Unnamed
-		if read_blob_at(f, 0x162E20, 15) == "Art of Fighting":
+	elif serial_number == b"T0000": # Unnamed
+		if read_blob_at(f, 0x162E20, 15) == b"Art of Fighting":
 			return (u"Art of Fighting", "T0000")
-		elif read_blob_at(f, 0x29E898B0, 17) == "Art of Fighting 2":
+		elif read_blob_at(f, 0x29E898B0, 17) == b"Art of Fighting 2":
 			return (u"Art of Fighting 2", "T0000")
-		elif read_blob_at(f, 0x26D5BCA4, 17) == "Art of Fighting 3":
+		elif read_blob_at(f, 0x26D5BCA4, 17) == b"Art of Fighting 3":
 			return (u"Art of Fighting 3", "T0000")
-		elif read_blob_at(f, 0x295301F0, 5) == "Redux":
+		elif read_blob_at(f, 0x295301F0, 5) == b"Redux":
 			return (u"Redux: Dark Matters", "T0000")
 
 	return (title, serial_number)
 
 def strip_comments(data):
-	lines = data.split("\r\n")
+	lines = data.split(b"\r\n")
 	data = []
 	for line in lines:
-		if '/*' not in line and '*/' not in line:
+		if b'/*' not in line and b'*/' not in line:
 			data.append(line)
 
-	return "\r\n".join(data)
+	return b"\r\n".join(data)
 			
 
 with open('db_dreamcast_unofficial.json', 'rb') as f:
-	unofficial_db = json.loads(strip_comments(f.read()))
+	unofficial_db = json.loads(strip_comments(f.read()).decode('utf8'))
 
 with open('db_dreamcast_official_us.json', 'rb') as f:
-	official_us_db = json.loads(strip_comments(f.read()))
+	official_us_db = json.loads(strip_comments(f.read()).decode('utf8'))
 
 with open('db_dreamcast_official_jp.json', 'rb') as f:
-	official_jp_db = json.loads(strip_comments(f.read()))
+	official_jp_db = json.loads(strip_comments(f.read()).decode('utf8'))
 
 with open('db_dreamcast_official_eu.json', 'rb') as f:
-	official_eu_db = json.loads(strip_comments(f.read()))
+	official_eu_db = json.loads(strip_comments(f.read()).decode('utf8'))
 
+
+# Convert the keys from strings to bytes
+dbs = [
+	unofficial_db,
+	official_us_db,
+	official_jp_db,
+	official_eu_db,
+]
+for db in dbs:
+	keys = db.keys()
+	for key in keys:
+		# Get the value
+		val = db[key]
+
+		# Remove the unicode key
+		db.pop(key)
+
+		# Add the bytes key and value
+		db[bytes(key, 'utf-8')] = val
 
 def is_dreamcast_file(game_file):
 	# Skip if not file
@@ -139,7 +158,6 @@ def is_dreamcast_file(game_file):
 
 def locate_string_in_file(f, file_size, string_to_find):
 	string_length = len(string_to_find)
-
 	f.seek(0)
 	while True:
 		# Read into the buffer
@@ -169,12 +187,13 @@ def locate_string_in_file(f, file_size, string_to_find):
 	return -1
 
 def get_track_01_from_gdi_file(file_name):
-	path = os.path.dirname(file_name)
+	path = bytes(os.path.dirname(file_name), 'utf-8')
 	with open(file_name, 'rb') as f:
-		track_01_line = f.read().split("\r\n")[1]
-		track_01_file = track_01_line.split(' ')[4]
+		track_01_line = f.read().split(b"\r\n")[1]
+		track_01_file = track_01_line.split(b' ')[4]
 		track_01_file = os.path.join(path, track_01_file)
 		return track_01_file
+
 
 def get_dreamcast_game_info(game_file):
 	# Get the full file name
@@ -189,7 +208,7 @@ def get_dreamcast_game_info(game_file):
 	file_size = os.path.getsize(full_entry)
 
 	# Get the location of the header
-	header_text = "SEGA SEGAKATANA SEGA ENTERPRISES"
+	header_text = b"SEGA SEGAKATANA SEGA ENTERPRISES"
 	index = locate_string_in_file(f, file_size, header_text)
 	
 	# Throw if index not found
