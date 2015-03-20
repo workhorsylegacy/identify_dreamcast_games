@@ -32,6 +32,8 @@ import json
 
 BUFFER_SIZE = 1024 * 1024 * 10
 
+IS_PY2 = sys.version_info[0] == 2
+
 
 def strip_comments(data):
 	lines = data.split(b"\r\n")
@@ -73,7 +75,10 @@ for db in dbs:
 		db.pop(key)
 
 		# Add the bytes key and value
-		db[bytes(key, 'utf-8')] = val
+		if IS_PY2:
+			db[bytes(key)] = val
+		else:
+			db[bytes(key, 'utf-8')] = val
 
 
 def read_blob_at(file, start_address, size):
@@ -189,7 +194,12 @@ def locate_string_in_file(f, file_size, string_to_find):
 	return -1
 
 def get_track_01_from_gdi_file(file_name):
-	path = bytes(os.path.dirname(file_name), 'utf-8')
+	path = os.path.dirname(file_name)
+	if IS_PY2:
+		path = bytes(path)
+	else:
+		path = bytes(path, 'utf-8')
+
 	with open(file_name, 'rb') as f:
 		track_01_line = f.read().split(b"\r\n")[1]
 		track_01_file = track_01_line.split(b' ')[4]
