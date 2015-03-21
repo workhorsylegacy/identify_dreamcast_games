@@ -225,8 +225,9 @@ def is_dreamcast_file(game_file):
 	if not os.path.isfile(game_file):
 		return False
 
+	# FIXME: Make it work with .mdf/.mds, .nrg, and .ccd/.img
 	# Skip if not a usable file
-	if not os.path.splitext(game_file)[1].lower() in ['.cdi', '.gdi', '.iso', '.mdf']:
+	if not os.path.splitext(game_file)[1].lower() in ['.cdi', '.gdi', '.iso']:
 		return False
 
 	return True

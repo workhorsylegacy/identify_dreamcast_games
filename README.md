@@ -3,6 +3,9 @@ identify_dreamcast_games
 
 A module for identifying Sega Dreamcast games with Python 2 &amp; 3
 
+Only works with .cdi, .gdi, and .iso
+
+Does not yet work with .mdf/.mds, .nrg, and .ccd/.img
 
 Example use:
 -----
