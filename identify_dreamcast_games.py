@@ -86,13 +86,18 @@ def _read_blob_at(file, start_address, size):
 	blob = file.read(size)
 	return blob
 
-# FIXME: Look up these games and make sure it works
 def _fix_games_with_same_serial_number(f, title, serial_number):
+	if serial_number == 'T-8111D-50':
+		if title == "ECW HARDCORE REVOLUTION": # EU ECW Hardcore Revolution
+			return ("ECW Hardcore Revolution", "T-8111D-50")
+		elif title == "DEAD OR ALIVE 2": # EU Dead or Alive 2
+			return ("Dead or Alive 2", "T-8111D-50")
+	elif serial_number == 'T-8101N':
+		if title == "QUARTERBACK CLUB 2000": #US NFL Quarterback Club 2000
+			return ("NFL Quarterback Club 2000", "T-8101N")
+		elif title == "JEREMY MCGRATH SUPERCROSS 2000": #US Jeremy McGrath Supercross 2000
+			return ("Jeremy McGrath Supercross 2000", "T-8101N")
 	'''
-	if serial_number == 'T8116D  05':
-		EU ECW Hardcore Revolution
-		EU Dead or Alive 2
-
 	elif serial_number == 'T9706D  61':
 		EU 18 Wheeler: American Pro Trucker
 		EU 4-Wheel Thunder
@@ -108,20 +113,13 @@ def _fix_games_with_same_serial_number(f, title, serial_number):
 	elif serial_number == 'MK-51168':
 		US NFL 2K2
 		US Confidential Mission
-
-	elif serial_number == 'T8101N':
-		US Jeremy McGrath Supercross 2000
-		US NFL Quarterback Club 2000
-
 	elif serial_number == 'T30001M':
 		JP D2 Shock
 		JP Kaze no Regret Limited Edition
-
 	elif serial_number == 'MK51038  50':
 		EU Sega WorldWide Soccer 2000 Euro Edition
 		EU Zombie Revenge
 	'''
-
 	return (title, serial_number)
 
 def _fix_games_that_are_mislabeled(f, title, serial_number):
