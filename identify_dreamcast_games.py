@@ -168,6 +168,8 @@ def _fix_games_that_are_mislabeled(f, title, serial_number):
 			return (u"Hydro Thunder", "T9702N")
 		elif _read_blob_at(f, 0x2D096802, 17) == b"MARVEL VS. CAPCOM":
 			return (u"Marvel vs. Capcom 2", "T1212N")
+		elif _read_blob_at(f, 0x1480A730, 13) == b"POWER STONE 2":
+			return (u"Power Stone 2", "T-1211N")
 	elif serial_number == b"T44304N": # Sports Jam
 		if _read_blob_at(f, 0x157FA8, 9) == b"OUTRIGGER":
 			return (u"OutTrigger: International Counter Terrorism Special Force", "MK-51102")
