@@ -43,18 +43,19 @@ def _strip_comments(data):
 			data.append(line)
 
 	return b"\r\n".join(data)
-			
 
-with open('db_dreamcast_unofficial.json', 'rb') as f:
+root = os.path.dirname(os.path.realpath(__file__))
+
+with open(os.path.join(root, 'db_dreamcast_unofficial.json'), 'rb') as f:
 	unofficial_db = json.loads(_strip_comments(f.read()).decode('utf8'))
 
-with open('db_dreamcast_official_us.json', 'rb') as f:
+with open(os.path.join(root, 'db_dreamcast_official_us.json'), 'rb') as f:
 	official_us_db = json.loads(_strip_comments(f.read()).decode('utf8'))
 
-with open('db_dreamcast_official_jp.json', 'rb') as f:
+with open(os.path.join(root, 'db_dreamcast_official_jp.json'), 'rb') as f:
 	official_jp_db = json.loads(_strip_comments(f.read()).decode('utf8'))
 
-with open('db_dreamcast_official_eu.json', 'rb') as f:
+with open(os.path.join(root, 'db_dreamcast_official_eu.json'), 'rb') as f:
 	official_eu_db = json.loads(_strip_comments(f.read()).decode('utf8'))
 
 
