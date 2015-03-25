@@ -128,7 +128,7 @@ def _fix_games_that_are_mislabeled(f, title, serial_number):
 		if _read_blob_at(f, 0x159208, 12) == b"DYNAMITE COP":
 			return (u"Dynamite Cop!", "MK-51013")
 	elif serial_number == b"MK-51035": # Crazy Taxi
-		if _read_blob_at(f, 0x1617E654, 9) == b"Half-Life":
+		if _read_blob_at(f, 0x1617E652, 9) == b"Half-Life":
 			return (u"Half-Life", "T0000M")
 		elif _read_blob_at(f, 0x1EA78B5, 10) == b"Shadow Man":
 			return (u"Shadow Man", "T8106N")
@@ -174,6 +174,9 @@ def _fix_games_that_are_mislabeled(f, title, serial_number):
 	elif serial_number == b"T44304N": # Sports Jam
 		if _read_blob_at(f, 0x157FA8, 9) == b"OUTRIGGER":
 			return (u"OutTrigger: International Counter Terrorism Special Force", "MK-51102")
+	elif serial_number == b"MK-51028": # Virtua Striker 2
+		if _read_blob_at(f, 0x1623B0, 12) == b"zerogunner 2":
+			return (u"Zero Gunner 2", "MK-51028")
 
 	return (title, serial_number)
 
