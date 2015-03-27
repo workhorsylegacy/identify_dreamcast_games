@@ -162,7 +162,7 @@
 /* DCP Releases */
 "T-8111D-50" : "ECW Hardcore Revolution",
 "T8116D  50" : "Dead or Alive 2",
-"T-9706D-50" : "4 Wheeler Thunder",
+"T-9706D-50" : "4 Wheel Thunder",
 "MK-5106450" : "18 Wheeler: American Pro Trucker",
 "T1711N" : "Evolution 2: Far Off Promise",
 "MK51154 50" : "Fighting Vipers 2",
@@ -172,9 +172,14 @@
 "MK-5103850" : "Zombie Revenge",
 "MK-5114950" : "Toy Racer",
 "MK-5112550" : "Planet Ring",
+"T15105D 50" : "V-Rally 2: Expert Edition",
+"T17717D 50" : "The Next Tetris",
 
 /* Echelon Releases */
 "T-8113D-50" : "Fur Fighters",
+"T-9707N" : "San Francisco Rush 2049",
+"T17711D" : "Stupid Invaders",
+"MK-5105950" : "Shenmue Passport",
 
 /* Others */
 "THALIA-005" : "Evolution: The World of Sacred Device",
@@ -187,6 +192,8 @@
 "T-8101N" : "NFL Quarterback Club 2000",
 "MK-51038-50" : "Sega WorldWide Soccer 2000 Euro Edition",
 "MK51083 50" : "Sega WorldWide Soccer 2000 Euro Edition",
+"T11111N" : "Sega Bass Fishing",
+"T12509N" : "Super Runabout: San Francisco Edition",
 
 
 /* Unreleased */
