@@ -131,8 +131,8 @@ def _fix_games_with_same_serial_number(f, title, serial_number):
 def _fix_games_that_are_mislabeled(f, title, serial_number):
 	if serial_number == b"T1402N": # Mr. Driller
 		if _read_blob_at(f, 0x159208, 12) == b"DYNAMITE COP":
-			return (u"Dynamite Cop!", "MK-51013")
-	elif serial_number == b"MK-51035": # Crazy Taxi
+			return (u"Dynamite Cop!", "MK51013")
+	elif serial_number == b"MK51035": # Crazy Taxi
 		if _read_blob_at(f, 0x1617E652, 9) == b"Half-Life":
 			return (u"Half-Life", "T0000M")
 		elif _read_blob_at(f, 0x1EA78B5, 10) == b"Shadow Man":
@@ -154,41 +154,41 @@ def _fix_games_that_are_mislabeled(f, title, serial_number):
 			return (u"Art of Fighting 3", "T0000")
 		elif _read_blob_at(f, 0x295301F0, 5) == b"Redux":
 			return (u"Redux: Dark Matters", "T0000")
-	elif serial_number == b"MK-51025": # NHL 2K1
+	elif serial_number == b"MK51025": # NHL 2K1
 		if _read_blob_at(f, 0x410CA8, 14) == b"READY 2 RUMBLE":
 			return (u"Ready 2 Rumble Boxing", "T9704N")
 	elif serial_number == b"T36804N": # Walt Disney World Quest: Magical Racing Tour
 		if _read_blob_at(f, 0x245884, 6) == b"MakenX":
-			return (u"Maken X", "MK-51050")
-	elif serial_number == b"RDC-0117": # The king of Fighters '96 Collection (NEO4ALL RC4)
+			return (u"Maken X", "MK51050")
+	elif serial_number == b"RDC0117": # The king of Fighters '96 Collection (NEO4ALL RC4)
 		if _read_blob_at(f, 0x159208, 16) == b"BOMBERMAN ONLINE":
-			return (u"Bomberman Online", "RDC-0120")
-	elif serial_number == b"RDC-0140": # Dead or Alive 2
+			return (u"Bomberman Online", "RDC0120")
+	elif serial_number == b"RDC0140": # Dead or Alive 2
 		if _read_blob_at(f, 0x15639268, 13) == b"CHUCHU ROCKET":
-			return (u"ChuChu Rocket!", "RDC-0139")
+			return (u"ChuChu Rocket!", "RDC0139")
 	elif serial_number == b"T19724M": # Pizzicato Polka: Suisei Genya
 		if _read_blob_at(f, 0x3CA16B8, 7) == b"DAYTONA":
-			return (u"Daytona USA", "MK-51037")
-	elif serial_number == b"MK-51049": # ChuChu Rocket!
+			return (u"Daytona USA", "MK51037")
+	elif serial_number == b"MK51049": # ChuChu Rocket!
 		if _read_blob_at(f, 0xC913DDC, 13) == b"HYDRO THUNDER":
 			return (u"Hydro Thunder", "T9702N")
 		elif _read_blob_at(f, 0x2D096802, 17) == b"MARVEL VS. CAPCOM":
 			return (u"Marvel vs. Capcom 2", "T1212N")
 		elif _read_blob_at(f, 0x1480A730, 13) == b"POWER STONE 2":
-			return (u"Power Stone 2", "T-1211N")
+			return (u"Power Stone 2", "T1211N")
 	elif serial_number == b"T44304N": # Sports Jam
 		if _read_blob_at(f, 0x157FA8, 9) == b"OUTRIGGER":
-			return (u"OutTrigger: International Counter Terrorism Special Force", "MK-51102")
-	elif serial_number == b"MK-51028": # Virtua Striker 2
+			return (u"OutTrigger: International Counter Terrorism Special Force", "MK51102")
+	elif serial_number == b"MK51028": # Virtua Striker 2
 		if _read_blob_at(f, 0x1623B0, 12) == b"zerogunner 2":
-			return (u"Zero Gunner 2", "MK-51028")
-			return (u"OutTrigger: International Counter Terrorism Special Force", "MK-51102")
+			return (u"Zero Gunner 2", "MK51028")
+			return (u"OutTrigger: International Counter Terrorism Special Force", "MK51102")
 	elif serial_number == b"T1240M": # BioHazard Code: Veronica Complete
 		if _read_blob_at(f, 0x157FAD, 14) == b"BASS FISHING 2":
-			return (u"Sega Bass Fishing 2", "MK-51166")
-	elif serial_number == b"MK-51100": # Phantasy Star Online
+			return (u"Sega Bass Fishing 2", "MK51166")
+	elif serial_number == b"MK51100": # Phantasy Star Online
 		if _read_blob_at(f, 0x52F28A8, 26) == b"Phantasy Star Online Ver.2":
-			return (u"Phantasy Star Online Ver. 2", "MK-51166")
+			return (u"Phantasy Star Online Ver. 2", "MK51166")
 
 	return (title, serial_number)
 
@@ -276,13 +276,21 @@ def get_dreamcast_game_info(game_file):
 	offset = len(header_text)
 	disc_info = header[offset + 5 : offset + 5 + 11].strip()
 	region = header[offset + 14 : offset + 14 + 10].strip()
-	serial_number = header[offset + 32 : offset + 32 + 10].strip()
+	serial_number = header[offset + 32 : offset + 32 + 10].replace(b'-', b'').replace(b' ', b'').strip()
 	version = header[offset + 42 : offset + 42 + 22].strip()
 	boot = header[offset + 64 : offset + 64 + 16].strip()
 	maker = header[offset + 80 : offset + 80 + 16].strip()
 	sloppy_title = header[offset + 96 : ].strip()
 	title = None
-
+	'''
+	print(disc_info)
+	print(region)
+	print(serial_number)
+	print(version)
+	print(boot)
+	print(maker)
+	print(sloppy_title)
+	'''
 	# Check for different types of releases
 
 	# Unofficial
@@ -344,6 +352,7 @@ def main():
 	for key in info.keys():
 		value = info[key]
 		if type(value) is bytes:
+			#print('!!!!!!!!!!!!!!!!!!!!!!!!!!!', value, '??????????')
 			value = value.decode('utf-8')
 		info[key] = value
 
