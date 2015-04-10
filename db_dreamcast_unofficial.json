@@ -124,12 +124,12 @@
 "RDC-0120" : "Bomberman Online",
 "RDC-0121" : "Red Dog Superior Firepower",
 "RDC-0122" : "Spawn",
-"RDC-0123" : "Ball Breakers (Unreleased)",
+"RDC-0123" : "Ball Breakers",
 "RDC-0124" : "Tokyo Xtreme Racer",
 "RDC-0125" : "Mutation Nation (NEO4ALL RC4)",
 "RDC-0126" : "Ragnagard (NEO4ALL RC4)",
 "RDC-0127" : "Rippin' Riders",
-"RDC-0128" : "Resident Evil CODE: Veronica",
+"RDC-0128" : "Resident Evil Code: Veronica",
 "RDC-0129" : "Tech Romancer (99 Minute Disc Required)",
 "RDC-0130" : "Army Men Sarge's Heroes",
 "RDC-0131" : "Mobile Suit Gundam E.F.F. Vs. Zeon & DX",
@@ -208,6 +208,9 @@
 "NGDT300P" : "Last Hope - Pink Bullets",
 "NGDT-304DCRE" : "NEO XYX",
 "MK1014" : "NEO XYX",
-"DR001" : "Sturmwind"
+"DR001" : "Sturmwind",
+"DR002" : "Inhabitants",
+"DR003" : "Irides: Master of Blocks",
+"DR004" : "Cool Herders"
 }
 
