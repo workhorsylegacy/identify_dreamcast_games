@@ -323,5 +323,34 @@ def get_dreamcast_game_info(game_file):
 		'header_index' : index,
 	}
 
+def main():
+	# Just return if there are no args
+	if len(sys.argv) < 2:
+		return
 
+	# Just return if not a Dreamcast file
+	game_file = sys.argv[1]
+	if not is_dreamcast_file(game_file):
+		return
+
+	# Return 1 if fails to find game info
+	info = None
+	try:
+		info = get_dreamcast_game_info(game_file)
+	except:
+		sys.exit(1)
+
+	# Convert any binary strings to normal strings to be JSON friendly
+	for key in info.keys():
+		value = info[key]
+		if type(value) is bytes:
+			value = value.decode('utf-8')
+		info[key] = value
+
+	# If the game is found, return the info as JSON
+	print(json.dumps(info))
+
+
+if __name__ == "__main__":
+	main()
 
