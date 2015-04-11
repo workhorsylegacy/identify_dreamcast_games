@@ -174,6 +174,8 @@
 /* Echelon Releases */
 "T8113D50" : "Fur Fighters",
 "T17711D" : "Stupid Invaders",
+"T15111D.*." : "Test Drive Le Mans",
+"T8117D50" : "Spirit of Speed 1937",
 
 /* Others */
 "THALIA005" : "Evolution: The World of Sacred Device",
@@ -185,6 +187,13 @@
 "MK5108350" : "Sega WorldWide Soccer 2000 Euro Edition",
 "T11111N" : "Sega Bass Fishing",
 "T12509N" : "Super Runabout: San Francisco Edition",
+"T11010N" : "Maximum Pool",
+"T41401D50" : "Soul Fighter",
+"Rainbow..." : "Tom Clancy's Rainbow Six",
+"T40210D" : "Tokyo Highway Challenge 2",
+"T3001N" : "F1 World Grand Prix",
+"T9505N" : "ESPN NBA 2Night",
+"T9504D" : "ESPN International Track & Field",
 
 
 /* Unreleased */

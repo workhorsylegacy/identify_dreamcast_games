@@ -145,6 +145,8 @@ def _fix_games_that_are_mislabeled(f, title, serial_number):
 			return (u"Ball Breakers", "T0000M")
 		elif _read_blob_at(f, 0x4BD5EE5, 6) == b"TOEJAM":
 			return (u"ToeJam and Earl 3", "T0000M")
+		elif _read_blob_at(f, 0x2DBF4C48, 14) == b"TNN MOTORSPORT":
+			return (u"TNN Motorsports HardCore Heat", "T13701N")
 	elif serial_number == b"T0000": # Unnamed
 		if _read_blob_at(f, 0x162E20, 15) == b"Art of Fighting":
 			return (u"Art of Fighting", "T0000")
@@ -154,6 +156,8 @@ def _fix_games_that_are_mislabeled(f, title, serial_number):
 			return (u"Art of Fighting 3", "T0000")
 		elif _read_blob_at(f, 0x295301F0, 5) == b"Redux":
 			return (u"Redux: Dark Matters", "T0000")
+		elif _read_blob_at(f, 0x157FA8, 20) == b"RECORD OF LODOSS WAR":
+			return (u"Record of Lodoss War", "T40218N")
 	elif serial_number == b"MK51025": # NHL 2K1
 		if _read_blob_at(f, 0x410CA8, 14) == b"READY 2 RUMBLE":
 			return (u"Ready 2 Rumble Boxing", "T9704N")
@@ -276,12 +280,19 @@ def get_dreamcast_game_info(game_file):
 	offset = len(header_text)
 	disc_info = header[offset + 5 : offset + 5 + 11].strip()
 	region = header[offset + 14 : offset + 14 + 10].strip()
-	serial_number = header[offset + 32 : offset + 32 + 10].replace(b'-', b'').replace(b' ', b'').strip()
+	serial_number = header[offset + 32 : offset + 32 + 10].strip()
 	version = header[offset + 42 : offset + 42 + 22].strip()
 	boot = header[offset + 64 : offset + 64 + 16].strip()
 	maker = header[offset + 80 : offset + 80 + 16].strip()
 	sloppy_title = header[offset + 96 : ].strip()
 	title = None
+
+	# Remove trailing zeros
+	if serial_number.endswith(b' 00'):
+		serial_number = serial_number.rstrip(b' 00').strip()
+
+	# Remove any spaces and dashes
+	serial_number = serial_number.replace(b'-', b'').replace(b' ', b'').strip()
 	'''
 	print(disc_info)
 	print(region)
@@ -350,10 +361,11 @@ def main():
 
 	# Convert any binary strings to normal strings to be JSON friendly
 	for key in info.keys():
+		#print(key)
 		value = info[key]
 		if type(value) is bytes:
 			#print('!!!!!!!!!!!!!!!!!!!!!!!!!!!', value, '??????????')
-			value = value.decode('utf-8')
+			value = value.decode('cp1252', 'ignore').encode('utf-8').decode('utf-8')
 		info[key] = value
 
 	# If the game is found, return the info as JSON
